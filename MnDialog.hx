@@ -98,7 +98,7 @@ class MnDialog{
     }
 
     public function outputCSS(){
-        if(document)
+        var oCSS = document.getElementById(this.cssPrefix);
         // CSS を用意
         var cssPrefix = this.cssPrefix + "_";
         /*
