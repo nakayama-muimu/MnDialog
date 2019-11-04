@@ -4,8 +4,6 @@ import js.Browser.document;
 @:keep
 
 
-
-
 class MnDialog{
     var divBG:js.html.DivElement;
     var divBase:js.html.DivElement;
@@ -21,10 +19,12 @@ class MnDialog{
     var height:Int;
 
     public function new(width:Int = 250, height:Int = 150, id:String, cssPrefix:String){
-        // id
+        // 引数の処理
+        // オブジェクトのid
         if(id != null){
             this.id = id;
         }
+        // cssのプレフィックス（styleタグのidとしても使用）
         if(cssPrefix != null){
             this.cssPrefix = cssPrefix;
         }else{
@@ -33,6 +33,11 @@ class MnDialog{
         this.width = width;
         this.height = height;
 
+        // cssの出力
+        this.outputCSS();
+
+        // エレメントの作成
+        cssPrefix = this.cssPrefix + "_";
         // 背景
         divBG = document.createDivElement();
         /*
@@ -73,6 +78,7 @@ class MnDialog{
         divBase.appendChild(divTitle);
 
         divBody = document.createDivElement();
+        // 世を忍ぶ仮の表示内容
         divBody.innerHTML = "Body<br>
         <ul>
         <li>aaa</li><li>bbb</li><li>ccc</li></ul>";
@@ -98,8 +104,12 @@ class MnDialog{
     }
 
     public function outputCSS(){
+        // CSS が存在していたら，更新のために削除する
         var oCSS = document.getElementById(this.cssPrefix);
-        // CSS を用意
+        if(oCSS != null){
+            document.head.removeChild(oCSS);
+        }
+
         var cssPrefix = this.cssPrefix + "_";
         /*
         if(this.id != ""){
@@ -148,7 +158,7 @@ class MnDialog{
     background-color: " + colorButton + ";
 }";
         var style = document.createStyleElement();
-        style.id = cssPrefix;
+        style.id = this.cssPrefix;
         style.appendChild(document.createTextNode(css));
         document.head.appendChild(style);
     }
