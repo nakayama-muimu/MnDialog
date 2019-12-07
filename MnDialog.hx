@@ -11,6 +11,7 @@ class MnDialog{
     var divBody:js.html.DivElement;
     var divButtons:js.html.DivElement;
     var colorTitle:String = "#9999ff";
+    var colorTitleText = "#ffffff";
     var colorButton:String = "#6666ff";
     var colorBase:String = "#eeeeff";
     var cssPrefix:String;
@@ -34,7 +35,7 @@ class MnDialog{
         this.height = height;
 
         // cssの出力
-        this.outputCSS();
+        this.outputCSS(false);
 
         // エレメントの作成
         cssPrefix = this.cssPrefix + "_";
@@ -103,10 +104,38 @@ class MnDialog{
 
     }
 
-    public function outputCSS(){
+    public function setTitle(text:String){
+        if(text != null){
+            divTitle.textContent = text;
+        }
+
+    }
+
+    public function setColor(colorBase, colorTitle, colorTitleText, colorButton){
+        if(colorBase != null && colorBase != ""){
+            this.colorBase = colorBase;
+        }
+        if(colorTitle != null && colorTitle != ""){
+            this.colorTitle = colorTitle;
+        }
+        if(colorTitleText != null && colorTitleText != ""){
+            this.colorTitleText = colorTitleText;
+        }
+        if(colorButton != null && colorButton != ""){
+            this.colorButton = colorButton;
+        }
+        this.outputCSS();
+    }
+
+    public function outputCSS(delete:Bool = true){
         // CSS が存在していたら，更新のために削除する
         var oCSS = document.getElementById(this.cssPrefix);
+        trace(oCSS);
         if(oCSS != null){
+            if(!delete){
+                trace("Canceled deletion of css: ", this.cssPrefix);
+                return;
+            }
             document.head.removeChild(oCSS);
         }
 
@@ -140,10 +169,12 @@ class MnDialog{
 }
 ." + cssPrefix + "title{
     background-color: " + colorTitle + ";
+    color: " + colorTitleText + ";
     padding: 3px;
 }
 ." + cssPrefix + "body{
     padding: 3px;
+    height: " + (this.height - 60) + "px;
 }
 ." + cssPrefix + "buttons{
     text-align: center;
@@ -161,7 +192,12 @@ class MnDialog{
         style.id = this.cssPrefix;
         style.appendChild(document.createTextNode(css));
         document.head.appendChild(style);
+        oCSS = document.getElementById(this.cssPrefix);
+        trace(oCSS);
     }
+
+
+
     public function show(){
         divBG.style.display = "block";
     }

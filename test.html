@@ -11,13 +11,20 @@
     var dlg;
     function cbLoad(){"use strict"
         console.log("Intializing...");
+        //dlg = new MnDialog(800, 300, "dlg_id", "dlg_css");
+        //dlg = new MnDialog(800, 300, "mydlg_id", "mydlg");
+        //dlg = new MnDialog(800, 300);
         dlg = new MnDialog();
+        dlg.setTitle("This is a test");
         var evAction = "click";
         if("ontouchend" in window) evAction = "touchend";
         gebi("bt01").addEventListener(evAction, function(){
             console.log("Showing dialog...");
             dlg.show();
         });
+        gebi("bt02").addEventListener(evAction, function(){
+            dlg.setColor("#ffffcc","","","#ffffff");
+        })
     }
 
     function gebi(id){
@@ -27,10 +34,16 @@
 
 }())
         </script>
+        <style id="mydlg">
+.mydlg_base{
+    background-color: #99ffff;
+}
+        </style>
     </head>
     <body>
         <div class="container">
-            <button type="button" id="bt01">Show Dialog</button>
+            <button type="button" id="bt01">Show Dialog</button>&nbsp;&nbsp;
+            <button type="button" id="bt02">Change Color</button>
         </div>
     </body>
 </html>
