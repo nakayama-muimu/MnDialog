@@ -236,6 +236,7 @@ var css = '.${cssPrefix}bg{
     cursor: pointer;
     border-radius: 4px;
     min-width: 40px;
+    min-height: 20px;
 }
 .${cssPrefix}button:hover{
     background-color: ${colorButton};
