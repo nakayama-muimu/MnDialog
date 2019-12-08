@@ -120,16 +120,16 @@ MnDialog.prototype = {
 			window.document.head.removeChild(oCSS);
 		}
 		var cssPrefix = this.cssPrefix + "_";
-		var css = "." + cssPrefix + "bg{\n    display: none;\n    background-color: rgba(0, 0, 0, 0.2);\n    position: fixed;\n    left: 0;\n    top: 0;\n    width: 100%;\n    height: 100%;\n}\n." + cssPrefix + "base{\n    position: absolute;\n    left: 50%;\n    top: 50%;\n    width: " + this.width + "px;\n    min-height: " + this.height + "px;\n    transform: translate(-50%, -50%);\n    background-color: " + this.colorBase + ";\n    border: solid 2px " + this.colorTitle + ";\n    border-radius: 4px;\n}\n." + cssPrefix + "title{\n    background-color: " + this.colorTitle + ";\n    color: " + this.colorTitleText + ";\n    padding: 3px;\n}\n." + cssPrefix + "body{\n    padding: 3px;\n    height: " + (this.height - 60) + "px;\n}\n." + cssPrefix + "buttons{\n    text-align: center;\n    padding: 3px;\n}\n." + cssPrefix + "button{\n    border-style: none;\n    color: " + this.colorTitleText + ";\n    background-color: " + this.colorTitle + ";\n    cursor: pointer;\n    border-radius: 4px;\n    min-width: 40px;\n}\n." + cssPrefix + "button:hover{\n    background-color: " + this.colorButton + ";\n}";
+		var css = "." + cssPrefix + "bg{\n    display: none;\n    background-color: rgba(0, 0, 0, 0.2);\n    position: fixed;\n    left: 0;\n    top: 0;\n    width: 100%;\n    height: 100%;\n}\n." + cssPrefix + "base{\n    position: absolute;\n    left: 50%;\n    top: 50%;\n    width: " + this.width + "px;\n    min-height: " + this.height + "px;\n    transform: translate(-50%, -50%);\n    background-color: " + this.colorBase + ";\n    border: solid 2px " + this.colorTitle + ";\n    border-radius: 4px;\n}\n." + cssPrefix + "title{\n    background-color: " + this.colorTitle + ";\n    color: " + this.colorTitleText + ";\n    padding: 3px;\n}\n." + cssPrefix + "body{\n    padding: 3px;\n    height: " + (this.height - 60) + "px;\n}\n." + cssPrefix + "buttons{\n    text-align: center;\n    padding: 3px;\n}\n." + cssPrefix + "button{\n    border-style: none;\n    color: " + this.colorTitleText + ";\n    background-color: " + this.colorTitle + ";\n    cursor: pointer;\n    border-radius: 4px;\n    min-width: 40px;\n    min-height: 20px;\n}\n." + cssPrefix + "button:hover{\n    background-color: " + this.colorButton + ";\n}";
 		var style = window.document.createElement("style");
 		style.id = this.cssPrefix;
 		style.appendChild(window.document.createTextNode(css));
 		window.document.head.appendChild(style);
 		oCSS = window.document.getElementById(this.cssPrefix);
-		haxe_Log.trace(oCSS,{ fileName : "MnDialog.hx", lineNumber : 250, className : "MnDialog", methodName : "outputCSS"});
+		haxe_Log.trace(oCSS,{ fileName : "MnDialog.hx", lineNumber : 251, className : "MnDialog", methodName : "outputCSS"});
 	}
 	,setButtonType: function(btType,lang) {
-		haxe_Log.trace(btType,{ fileName : "MnDialog.hx", lineNumber : 254, className : "MnDialog", methodName : "setButtonType"});
+		haxe_Log.trace(btType,{ fileName : "MnDialog.hx", lineNumber : 255, className : "MnDialog", methodName : "setButtonType"});
 		this.button2.style.display = "none";
 		this.button3.style.display = "none";
 		switch(btType) {
