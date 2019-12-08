@@ -19,6 +19,7 @@ var MnDialog = $hx_exports["MnDialog"] = function(width,height,id,cssPrefix) {
 	this.colorButton = "#6666ff";
 	this.colorTitleText = "#ffffff";
 	this.colorTitle = "#9999ff";
+	var _gthis = this;
 	if(id != null) {
 		this.id = id;
 	}
@@ -45,21 +46,43 @@ var MnDialog = $hx_exports["MnDialog"] = function(width,height,id,cssPrefix) {
 	this.divTitle.textContent = "Title";
 	this.divBase.appendChild(this.divTitle);
 	this.divBody = window.document.createElement("div");
-	this.divBody.innerHTML = "Body<br>\n        <ul>\n        <li>aaa</li><li>bbb</li><li>ccc</li></ul>";
+	this.divBody.innerHTML = "";
 	this.divBody.className = cssPrefix + "body";
 	this.divBase.appendChild(this.divBody);
 	this.divButtons = window.document.createElement("div");
 	this.divButtons.className = cssPrefix + "buttons";
 	this.divBase.appendChild(this.divButtons);
-	var bt1 = window.document.createElement("button");
-	bt1.textContent = "Button 1";
-	bt1.className = cssPrefix + "button";
-	this.divButtons.appendChild(bt1);
+	this.button1 = window.document.createElement("button");
+	this.button1.textContent = "OK";
+	this.button1.value = "OK";
+	this.button1.className = cssPrefix + "button";
+	this.button1.name = "button1";
+	this.divButtons.appendChild(this.button1);
+	this.button2 = window.document.createElement("button");
+	this.button2.textContent = "Cancel";
+	this.button2.value = "Cancel";
+	this.button2.className = cssPrefix + "button";
+	this.button2.name = "button2";
+	this.divButtons.appendChild(this.button2);
+	this.button3 = window.document.createElement("button");
+	this.button3.textContent = "NO!";
+	this.button3.value = "No";
+	this.button3.className = cssPrefix + "button";
+	this.button3.name = "button3";
+	this.divButtons.appendChild(this.button3);
 	var evAction = "click";
 	if(Object.prototype.hasOwnProperty.call(window,"ontouchend")) {
 		evAction = "touchend";
 	}
-	bt1.addEventListener(evAction,$bind(this,this.cbButton1));
+	this.button1.addEventListener(evAction,function() {
+		_gthis.onButtonPress(_gthis.button1);
+	});
+	this.button2.addEventListener(evAction,function() {
+		_gthis.onButtonPress(_gthis.button2);
+	});
+	this.button3.addEventListener(evAction,function() {
+		_gthis.onButtonPress(_gthis.button3);
+	});
 };
 MnDialog.__name__ = true;
 MnDialog.prototype = {
@@ -88,28 +111,75 @@ MnDialog.prototype = {
 			$delete = true;
 		}
 		var oCSS = window.document.getElementById(this.cssPrefix);
-		haxe_Log.trace(oCSS,{ fileName : "MnDialog.hx", lineNumber : 133, className : "MnDialog", methodName : "outputCSS"});
+		haxe_Log.trace(oCSS,{ fileName : "MnDialog.hx", lineNumber : 136, className : "MnDialog", methodName : "outputCSS"});
 		if(oCSS != null) {
 			if(!$delete) {
-				haxe_Log.trace("Canceled deletion of css: ",{ fileName : "MnDialog.hx", lineNumber : 136, className : "MnDialog", methodName : "outputCSS", customParams : [this.cssPrefix]});
+				haxe_Log.trace("Canceled deletion of css: ",{ fileName : "MnDialog.hx", lineNumber : 139, className : "MnDialog", methodName : "outputCSS", customParams : [this.cssPrefix]});
 				return;
 			}
 			window.document.head.removeChild(oCSS);
 		}
 		var cssPrefix = this.cssPrefix + "_";
-		var css = "." + cssPrefix + "bg{\n    display: none;\n    background-color: rgba(0, 0, 0, 0.2);\n    position: fixed;\n    left: 0;\n    top: 0;\n    width: 100%;\n    height: 100%;\n}\n." + cssPrefix + "base{\n    position: absolute;\n    left: 50%;\n    top: 50%;\n    width: " + this.width + "px;\n    min-height: " + this.height + "px;\n    transform: translate(-50%, -50%);\n    background-color: " + this.colorBase + ";\n    border: solid 2px " + this.colorTitle + ";\n    border-radius: 3px;\n}\n." + cssPrefix + "title{\n    background-color: " + this.colorTitle + ";\n    color: " + this.colorTitleText + ";\n    padding: 3px;\n}\n." + cssPrefix + "body{\n    padding: 3px;\n    height: " + (this.height - 60) + "px;\n}\n." + cssPrefix + "buttons{\n    text-align: center;\n    padding: 3px;\n}\n." + cssPrefix + "button{\n    border-style: none;\n    background-color: " + this.colorTitle + ";\n    cursor: pointer;\n}\n." + cssPrefix + "button:hover{\n    background-color: " + this.colorButton + ";\n}";
+		var css = "." + cssPrefix + "bg{\n    display: none;\n    background-color: rgba(0, 0, 0, 0.2);\n    position: fixed;\n    left: 0;\n    top: 0;\n    width: 100%;\n    height: 100%;\n}\n." + cssPrefix + "base{\n    position: absolute;\n    left: 50%;\n    top: 50%;\n    width: " + this.width + "px;\n    min-height: " + this.height + "px;\n    transform: translate(-50%, -50%);\n    background-color: " + this.colorBase + ";\n    border: solid 2px " + this.colorTitle + ";\n    border-radius: 4px;\n}\n." + cssPrefix + "title{\n    background-color: " + this.colorTitle + ";\n    color: " + this.colorTitleText + ";\n    padding: 3px;\n}\n." + cssPrefix + "body{\n    padding: 3px;\n    height: " + (this.height - 60) + "px;\n}\n." + cssPrefix + "buttons{\n    text-align: center;\n    padding: 3px;\n}\n." + cssPrefix + "button{\n    border-style: none;\n    color: " + this.colorTitleText + ";\n    background-color: " + this.colorTitle + ";\n    cursor: pointer;\n    border-radius: 4px;\n    min-width: 40px;\n}\n." + cssPrefix + "button:hover{\n    background-color: " + this.colorButton + ";\n}";
 		var style = window.document.createElement("style");
 		style.id = this.cssPrefix;
 		style.appendChild(window.document.createTextNode(css));
 		window.document.head.appendChild(style);
 		oCSS = window.document.getElementById(this.cssPrefix);
-		haxe_Log.trace(oCSS,{ fileName : "MnDialog.hx", lineNumber : 196, className : "MnDialog", methodName : "outputCSS"});
+		haxe_Log.trace(oCSS,{ fileName : "MnDialog.hx", lineNumber : 250, className : "MnDialog", methodName : "outputCSS"});
+	}
+	,setButtonType: function(btType,lang) {
+		haxe_Log.trace(btType,{ fileName : "MnDialog.hx", lineNumber : 254, className : "MnDialog", methodName : "setButtonType"});
+		this.button2.style.display = "none";
+		this.button3.style.display = "none";
+		switch(btType) {
+		case "OK":
+			this.button1.textContent = "OK";
+			this.button1.value = "OK";
+			break;
+		case "OKCancel":
+			this.button1.textContent = "OK";
+			this.button1.value = "OK";
+			this.button2.style.display = "";
+			this.button2.textContent = "キャンセル";
+			this.button2.value = "Cancel";
+			break;
+		case "YesNo":
+			this.button1.textContent = "はい";
+			this.button1.value = "Yes";
+			this.button2.style.display = "";
+			this.button2.textContent = "いいえ";
+			this.button2.value = "No";
+			break;
+		case "YesNoCancel":
+			this.button1.textContent = "はい";
+			this.button1.value = "Yes";
+			this.button2.style.display = "";
+			this.button2.textContent = "いいえ";
+			this.button2.value = "No";
+			this.button3.style.display = "";
+			this.button3.textContent = "キャンセル";
+			this.button3.value = "Cancel";
+			break;
+		}
+	}
+	,setButtonCallback: function(cbFunc) {
+		this.cbButton = cbFunc;
 	}
 	,show: function() {
 		this.divBG.style.display = "block";
 	}
-	,cbButton1: function() {
+	,onButtonPress: function(button) {
 		this.divBG.style.display = "none";
+		if(this.cbButton != null) {
+			this.cbButton.call(this,button.value);
+		}
+	}
+	,onButtonPress_1: function(event) {
+		this.divBG.style.display = "none";
+		if(this.cbButton != null) {
+			this.cbButton.call(this,event.target);
+		}
 	}
 };
 var Std = function() { };
@@ -220,9 +290,6 @@ js_Boot.__string_rec = function(o,s) {
 		return String(o);
 	}
 };
-var $_;
-function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $global.$haxeUID++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = m.bind(o); o.hx__closures__[m.__id__] = f; } return f; }
-$global.$haxeUID |= 0;
 String.__name__ = true;
 Array.__name__ = true;
 Date.__name__ = "Date";
@@ -230,4 +297,4 @@ Object.defineProperty(js__$Boot_HaxeError.prototype,"message",{ get : function()
 	return String(this.val);
 }});
 js_Boot.__toStr = ({ }).toString;
-})(typeof exports != "undefined" ? exports : typeof window != "undefined" ? window : typeof self != "undefined" ? self : this, typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);
+})(typeof exports != "undefined" ? exports : typeof window != "undefined" ? window : typeof self != "undefined" ? self : this, {});

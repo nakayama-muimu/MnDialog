@@ -34,12 +34,16 @@ id-prefix
 ボタン
 - 0-3 個の表示が可能
   - 0 個の場合は，ダイアログをクリックで非表示に？
+  - OK OKCancel YesNo YesNoCancel
+- 表示は多言語対応
+  - en jpをとりあえず用意
+- Enter, Esc などキー入力に対応したい
 
 イベント処理
 - 種類
-  - ダイアログ以外をクリック or タップ
-  - ダイアログをクリック or タップ
-  - ボタン1-3を押す
+  - ダイアログ以外をクリック or タップ onBackgroundClick
+  - ダイアログをクリック or タップ: onDialogClick
+  - ボタン1-3を押す: onButtonPress
 
 
 

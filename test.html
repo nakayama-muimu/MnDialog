@@ -16,14 +16,20 @@
         //dlg = new MnDialog(800, 300);
         dlg = new MnDialog();
         dlg.setTitle("This is a test");
+        dlg.setButtonCallback(function(arg1){
+            console.log(arg1);
+        })
+        dlg.setButtonType("OKCancel");
         var evAction = "click";
         if("ontouchend" in window) evAction = "touchend";
         gebi("bt01").addEventListener(evAction, function(){
             console.log("Showing dialog...");
-            dlg.show();
+            var ret = dlg.show();
+            //console.log(ret);
         });
         gebi("bt02").addEventListener(evAction, function(){
             dlg.setColor("#ffffcc","","","#ffffff");
+            dlg.setButtonType("YesNoCancel");
         })
     }
 
