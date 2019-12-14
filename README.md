@@ -2,6 +2,7 @@ MnDialog
 - Javascript dialog. 
 - Sample https://nakayama-muimu.github.io/mndialog_example.html
 
+
 開発方針
 
 概要
