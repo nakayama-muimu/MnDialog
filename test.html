@@ -15,9 +15,10 @@
         //dlg = new MnDialog(800, 300, "mydlg_id", "mydlg");
         //dlg = new MnDialog(800, 300);
         dlg = new MnDialog();
-        dlg.setTitle("This is a test");
+        dlg.setTitle("This is a TITLE text");
+        dlg.setBody("This is a BODY text.")
         dlg.setButtonCallback(function(arg1){
-            console.log(arg1);
+            console.log("Button pressed: [" + arg1 + "]");
         })
         dlg.setButtonType("OKCancel");
         var evAction = "click";
@@ -28,8 +29,9 @@
             //console.log(ret);
         });
         gebi("bt02").addEventListener(evAction, function(){
-            dlg.setColor("#ffffcc","","","#ffffff");
+            dlg.setColor("#ffffcc","","","#ff99ff");
             dlg.setButtonType("YesNoCancel");
+            dlg.setBodyHTML("You can also set <span style='color: red;'>HTML</span> into the body.<br>Be careful not to implement XSS!");
         })
     }
 

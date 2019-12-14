@@ -24,7 +24,7 @@ class MnDialog{
     var height:Int;
     var cbButton:js.lib.Function;
 
-    public function new(width:Int = 250, height:Int = 150, id:String, cssPrefix:String){
+    public function new(width:Int = 250, height:Int = 20, id:String, cssPrefix:String){
         // 引数の処理
         // オブジェクトのid
         if(id != null){
@@ -114,6 +114,19 @@ class MnDialog{
 
     }
 
+    public function setBody(text:String){
+        if(text != null){
+            divBody.textContent = text;
+        }
+
+    }
+
+    public function setBodyHTML(htmlText:String){
+        if(htmlText != null){
+            divBody.innerHTML = htmlText;
+        }
+
+    }
     public function setColor(colorBase, colorTitle, colorTitleText, colorButton){
         if(colorBase != null && colorBase != ""){
             this.colorBase = colorBase;
@@ -215,6 +228,8 @@ var css = '.${cssPrefix}bg{
     background-color: ${colorBase};
     border: solid 2px ${colorTitle};
     border-radius: 4px;
+    text-align: left;
+    font-size: 0.8rem;
 }
 .${cssPrefix}title{
     background-color: ${colorTitle};
@@ -237,6 +252,7 @@ var css = '.${cssPrefix}bg{
     border-radius: 4px;
     min-width: 40px;
     min-height: 20px;
+    margin: 4px;
 }
 .${cssPrefix}button:hover{
     background-color: ${colorButton};
