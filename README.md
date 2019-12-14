@@ -1,3 +1,6 @@
+MnDialog
+- Javascript dialog. 
+- Sample https://nakayama-muimu.github.io/j2x_example.html
 
 開発方針
 
