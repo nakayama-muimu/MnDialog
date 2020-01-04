@@ -30,7 +30,7 @@
         });
         gebi("bt02").addEventListener(evAction, function(){
             dlg.setColor("#ffffcc","","","#ff99ff");
-            dlg.setButtonType("YesNoCancel");
+            dlg.setButtonType("YesNoCancel", "jp");
             dlg.setBodyHTML("You can also set <span style='color: red;'>HTML</span> into the body.<br>Be careful not to implement XSS!");
         })
     }
@@ -51,7 +51,7 @@
     <body>
         <div class="container">
             <button type="button" id="bt01">Show Dialog</button>&nbsp;&nbsp;
-            <button type="button" id="bt02">Change Color and Button</button>
+            <button type="button" id="bt02">Change Colors and Buttons</button>
         </div>
     </body>
 </html>

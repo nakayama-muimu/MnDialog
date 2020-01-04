@@ -7,6 +7,8 @@ var MnDialog = $hx_exports["MnDialog"] = function(width,height,id,cssPrefix) {
 	if(width == null) {
 		width = 250;
 	}
+	this.bDragging = false;
+	this.bTouchAvailable = false;
 	this.id = "";
 	this.colorBase = "#eeeeff";
 	this.colorButton = "#6666ff";
@@ -63,19 +65,29 @@ var MnDialog = $hx_exports["MnDialog"] = function(width,height,id,cssPrefix) {
 	this.button3.className = cssPrefix + "button";
 	this.button3.name = "button3";
 	this.divButtons.appendChild(this.button3);
-	var evAction = "click";
+	var evPress = "click";
+	var evDragStart = "mousedown";
+	var evDragMove = "mousemove";
+	var evDragEnd = "mouseup";
 	if(Object.prototype.hasOwnProperty.call(window,"ontouchend")) {
-		evAction = "touchend";
+		this.bTouchAvailable = true;
+		evPress = "touchend";
+		evDragStart = "touchstart";
+		evDragMove = "touchmove";
+		evDragEnd = "touchend";
 	}
-	this.button1.addEventListener(evAction,function() {
+	this.button1.addEventListener(evPress,function() {
 		_gthis.onButtonPress(_gthis.button1);
 	});
-	this.button2.addEventListener(evAction,function() {
+	this.button2.addEventListener(evPress,function() {
 		_gthis.onButtonPress(_gthis.button2);
 	});
-	this.button3.addEventListener(evAction,function() {
+	this.button3.addEventListener(evPress,function() {
 		_gthis.onButtonPress(_gthis.button3);
 	});
+	this.divTitle.addEventListener(evDragStart,$bind(this,this.startDrag));
+	this.divTitle.addEventListener(evDragMove,$bind(this,this.moveDrag));
+	this.divTitle.addEventListener(evDragEnd,$bind(this,this.endDrag));
 };
 MnDialog.prototype = {
 	setTitle: function(text) {
@@ -120,7 +132,7 @@ MnDialog.prototype = {
 			window.document.head.removeChild(oCSS);
 		}
 		var cssPrefix = this.cssPrefix + "_";
-		var css = "." + cssPrefix + "bg{\n    display: none;\n    background-color: rgba(0, 0, 0, 0.2);\n    position: fixed;\n    left: 0;\n    top: 0;\n    width: 100%;\n    height: 100%;\n}\n." + cssPrefix + "base{\n    position: absolute;\n    left: 50%;\n    top: 50%;\n    width: " + this.width + "px;\n    min-height: " + this.height + "px;\n    transform: translate(-50%, -50%);\n    background-color: " + this.colorBase + ";\n    border: solid 2px " + this.colorTitle + ";\n    border-radius: 4px;\n    text-align: left;\n    font-size: 0.8rem;\n}\n." + cssPrefix + "title{\n    background-color: " + this.colorTitle + ";\n    color: " + this.colorTitleText + ";\n    padding: 3px;\n}\n." + cssPrefix + "body{\n    padding: 3px;\n    height: " + (this.height - 60) + "px;\n}\n." + cssPrefix + "buttons{\n    text-align: center;\n    padding: 3px;\n}\n." + cssPrefix + "button{\n    border-style: none;\n    color: " + this.colorTitleText + ";\n    background-color: " + this.colorTitle + ";\n    cursor: pointer;\n    border-radius: 4px;\n    min-width: 40px;\n    min-height: 20px;\n    margin: 4px;\n}\n." + cssPrefix + "button:hover{\n    background-color: " + this.colorButton + ";\n}";
+		var css = "\n." + cssPrefix + "bg{\n    display: none;\n    background-color: rgba(0, 0, 0, 0.2);\n    position: fixed;\n    left: 0;\n    top: 0;\n    width: 100%;\n    height: 100%;\n}\n." + cssPrefix + "base{\n    position: absolute;\n    left: 50%;\n    top: 50%;\n    width: " + this.width + "px;\n    min-height: " + this.height + "px;\n    transform: translate(-50%, -50%);\n    background-color: " + this.colorBase + ";\n    border: solid 2px " + this.colorTitle + ";\n    border-radius: 4px;\n    text-align: left;\n    font-size: 0.8rem;\n}\n." + cssPrefix + "title{\n    background-color: " + this.colorTitle + ";\n    color: " + this.colorTitleText + ";\n    padding: 3px;\n    cursor: pointer;\n}\n." + cssPrefix + "body{\n    padding: 3px;\n    height: " + (this.height - 60) + "px;\n}\n." + cssPrefix + "buttons{\n    text-align: center;\n    padding: 3px;\n}\n." + cssPrefix + "button{\n    border-style: none;\n    color: " + this.colorTitleText + ";\n    background-color: " + this.colorTitle + ";\n    cursor: pointer;\n    border-radius: 4px;\n    min-width: 40px;\n    min-height: 20px;\n    margin: 4px;\n}\n." + cssPrefix + "button:hover{\n    background-color: " + this.colorButton + ";\n}";
 		var style = window.document.createElement("style");
 		style.id = this.cssPrefix;
 		style.appendChild(window.document.createTextNode(css));
@@ -128,35 +140,49 @@ MnDialog.prototype = {
 		oCSS = window.document.getElementById(this.cssPrefix);
 	}
 	,setButtonType: function(btType,lang) {
+		if(lang == null) {
+			lang = "en";
+		}
+		var caption;
+		switch(lang) {
+		case "fr":
+			caption = { ok : "OK", cancel : "Annuler", yes : "Oui", no : "Non"};
+			break;
+		case "jp":
+			caption = { ok : "OK", cancel : "キャンセル", yes : "はい", no : "いいえ"};
+			break;
+		default:
+			caption = { ok : "OK", cancel : "Cancel", yes : "Yes", no : "No"};
+		}
 		this.button2.style.display = "none";
 		this.button3.style.display = "none";
 		switch(btType) {
 		case "OK":
-			this.button1.textContent = "OK";
+			this.button1.textContent = caption.ok;
 			this.button1.value = "OK";
 			break;
 		case "OKCancel":
-			this.button1.textContent = "OK";
+			this.button1.textContent = caption.ok;
 			this.button1.value = "OK";
 			this.button2.style.display = "";
-			this.button2.textContent = "キャンセル";
+			this.button2.textContent = caption.cancel;
 			this.button2.value = "Cancel";
 			break;
 		case "YesNo":
-			this.button1.textContent = "はい";
+			this.button1.textContent = caption.yes;
 			this.button1.value = "Yes";
 			this.button2.style.display = "";
-			this.button2.textContent = "いいえ";
+			this.button2.textContent = caption.no;
 			this.button2.value = "No";
 			break;
 		case "YesNoCancel":
-			this.button1.textContent = "はい";
+			this.button1.textContent = caption.yes;
 			this.button1.value = "Yes";
 			this.button2.style.display = "";
-			this.button2.textContent = "いいえ";
+			this.button2.textContent = caption.no;
 			this.button2.value = "No";
 			this.button3.style.display = "";
-			this.button3.textContent = "キャンセル";
+			this.button3.textContent = caption.cancel;
 			this.button3.value = "Cancel";
 			break;
 		}
@@ -165,6 +191,8 @@ MnDialog.prototype = {
 		this.cbButton = cbFunc;
 	}
 	,show: function() {
+		this.divBase.style.left = "";
+		this.divBase.style.top = "";
 		this.divBG.style.display = "block";
 	}
 	,onButtonPress: function(button) {
@@ -179,5 +207,33 @@ MnDialog.prototype = {
 			this.cbButton.call(this,event.target);
 		}
 	}
+	,startDrag: function(ev) {
+		this.bDragging = true;
+		var evt = ev;
+		if(this.bTouchAvailable) {
+			evt = ev.changedTouches[0];
+		}
+		this.iX = evt.pageX;
+		this.iY = evt.pageY;
+	}
+	,moveDrag: function(ev) {
+		if(!this.bDragging) {
+			return;
+		}
+		var evt = ev;
+		if(this.bTouchAvailable) {
+			evt = ev.changedTouches[0];
+		}
+		this.divBase.style.left = this.divBase.offsetLeft + evt.pageX - this.iX + "px";
+		this.divBase.style.top = this.divBase.offsetTop + evt.pageY - this.iY + "px";
+		this.iX = evt.pageX;
+		this.iY = evt.pageY;
+	}
+	,endDrag: function() {
+		this.bDragging = false;
+	}
 };
-})(typeof exports != "undefined" ? exports : typeof window != "undefined" ? window : typeof self != "undefined" ? self : this, {});
+var $_;
+function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $global.$haxeUID++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = m.bind(o); o.hx__closures__[m.__id__] = f; } return f; }
+$global.$haxeUID |= 0;
+})(typeof exports != "undefined" ? exports : typeof window != "undefined" ? window : typeof self != "undefined" ? self : this, typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);

@@ -40,14 +40,14 @@ id-prefix
   - 0 個の場合は，ダイアログをクリックで非表示に？
   - OK OKCancel YesNo YesNoCancel
 - 表示は多言語対応
-  - en jpをとりあえず用意
+  - en jp fr をとりあえず用意
 - Enter, Esc などキー入力に対応したい
 
 イベント処理
 - 種類
-  - ダイアログ以外をクリック or タップ onBackgroundClick
-  - ダイアログをクリック or タップ: onDialogClick
-  - ボタン1-3を押す: onButtonPress
+  - ダイアログ以外をクリック or タップ: コールバック設定用の関数を設ける？
+  - ダイアログをクリック or タップ: コールバック設定用の関数を設ける？
+  - ボタン1-3を押す: 表示のメソッドでコールバックを指定
 
 
 

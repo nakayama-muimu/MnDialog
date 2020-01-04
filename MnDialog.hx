@@ -1,3 +1,5 @@
+import js.lib.Object;
+import js.html.TouchEvent;
 import js.lib.Function;
 import js.Browser.document;
 
@@ -23,6 +25,10 @@ class MnDialog{
     var width:Int;
     var height:Int;
     var cbButton:js.lib.Function;
+    var bTouchAvailable = false;
+    var bDragging = false;
+    var iX:Int;
+    var iY:Int;
 
     public function new(width:Int = 250, height:Int = 20, id:String, cssPrefix:String){
         // 引数の処理
@@ -95,16 +101,32 @@ class MnDialog{
         button3.name = "button3";
         divButtons.appendChild(button3);
 
+        // Desktop vs Mobile
+        var evPress = "click";
+        var evDragStart = "mousedown";
+        var evDragMove = "mousemove";
+        var evDragEnd = "mouseup";
+        if(Reflect.hasField(js.Browser.window, "ontouchend")){
+            bTouchAvailable = true;
+            evPress = "touchend";
+            evDragStart = "touchstart";
+            evDragMove = "touchmove";
+            evDragEnd = "touchend";
+        }
         // ボタンの動作
-        var evAction = "click";
-        if(Reflect.hasField(js.Browser.window, "ontouchend")) evAction = "touchend";
-        button1.addEventListener(evAction, function(){onButtonPress(button1);});
-        button2.addEventListener(evAction, function(){onButtonPress(button2);});
-        button3.addEventListener(evAction, function(){onButtonPress(button3);});
+        button1.addEventListener(evPress, function(){onButtonPress(button1);});
+        button2.addEventListener(evPress, function(){onButtonPress(button2);});
+        button3.addEventListener(evPress, function(){onButtonPress(button3);});
         /*
-        button2.addEventListener(evAction, onButtonPress);
-        button3.addEventListener(evAction, onButtonPress);
+        button2.addEventListener(evPress, onButtonPress);
+        button3.addEventListener(evPress, onButtonPress);
         */
+        // ドラッグ
+        divTitle.addEventListener(evDragStart, startDrag);
+        divTitle.addEventListener(evDragMove, moveDrag);
+        divTitle.addEventListener(evDragEnd, endDrag);
+        //divBG.addEventListener(evDragMove, moveDrag);
+        //divBG.addEventListener(evDragEnd, endDrag);
     }
 
     public function setTitle(text:String){
@@ -156,60 +178,9 @@ class MnDialog{
         }
 
         var cssPrefix = this.cssPrefix + "_";
-        /*
-        if(this.id != ""){
-            cssPrefix = "mndlg_" + this.id + "_";
-        }else{
-            cssPrefix = "mndlg_" + (Date.now()).getTime() + "_";
-        }
-        */
-        /*
-        var css = "." + cssPrefix + "bg{
-    display: none;
-    background-color: rgba(0, 0, 0, 0.2);
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-}
-." + cssPrefix + "base{
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: " + this.width + "px;
-    min-height: " + this.height + "px;
-    transform: translate(-50%, -50%);
-    background-color: " + colorBase + ";
-    border: solid 2px " + colorTitle + ";
-    border-radius: 4px;
-}
-." + cssPrefix + "title{
-    background-color: " + colorTitle + ";
-    color: " + colorTitleText + ";
-    padding: 3px;
-}
-." + cssPrefix + "body{
-    padding: 3px;
-    height: " + (this.height - 60) + "px;
-}
-." + cssPrefix + "buttons{
-    text-align: center;
-    padding: 3px;
-}
-." + cssPrefix + "button{
-    border-style: none;
-    color: " + colorTitleText + ";
-    background-color: " + colorTitle + ";
-    cursor: pointer;
-    border-radius: 4px;
-    min-width: 40px;
-}
-." + cssPrefix + "button:hover{
-    background-color: " + colorButton + ";
-}";
-*/
-var css = '.${cssPrefix}bg{
+
+        var css = '
+.${cssPrefix}bg{
     display: none;
     background-color: rgba(0, 0, 0, 0.2);
     position: fixed;
@@ -235,6 +206,7 @@ var css = '.${cssPrefix}bg{
     background-color: ${colorTitle};
     color: ${colorTitleText};
     padding: 3px;
+    cursor: pointer;
 }
 .${cssPrefix}body{
     padding: 3px;
@@ -273,32 +245,44 @@ var css = '.${cssPrefix}bg{
         btType: OK OKCancel YesNo YesNoCancel
         lang: en ja 
         */
+
+        if(lang == null) lang = "en";
+        var caption;
+        switch(lang){
+            case "jp":
+                caption = {ok:"OK", cancel:"キャンセル", yes:"はい", no:"いいえ"};
+            case "fr":
+                caption = {ok:"OK", cancel:"Annuler", yes:"Oui", no:"Non"};
+            default:
+                caption = {ok:"OK", cancel:"Cancel", yes:"Yes", no:"No"};
+        }
+
         button2.style.display = "none";
         button3.style.display = "none";
         switch(btType){
             case "OK":
-            button1.textContent = "OK";
+            button1.textContent = caption.ok;
             button1.value = "OK";
             case "OKCancel":
-            button1.textContent = "OK";
+            button1.textContent = caption.ok;
             button1.value = "OK";
             button2.style.display = "";
-            button2.textContent = "キャンセル";
+            button2.textContent = caption.cancel;
             button2.value = "Cancel";
             case "YesNo":
-            button1.textContent = "はい";
+            button1.textContent = caption.yes;
             button1.value = "Yes";
             button2.style.display = "";
-            button2.textContent = "いいえ";
+            button2.textContent = caption.no;
             button2.value = "No";
             case "YesNoCancel":
-            button1.textContent = "はい";
+            button1.textContent = caption.yes;
             button1.value = "Yes";
             button2.style.display = "";
-            button2.textContent = "いいえ";
+            button2.textContent = caption.no;
             button2.value = "No";
             button3.style.display = "";
-            button3.textContent = "キャンセル";
+            button3.textContent = caption.cancel;
             button3.value = "Cancel";
         }
     }
@@ -309,6 +293,8 @@ var css = '.${cssPrefix}bg{
     }
 
     public function show(){
+        divBase.style.left = "";
+        divBase.style.top = "";
         divBG.style.display = "block";
     }
 
@@ -319,6 +305,44 @@ var css = '.${cssPrefix}bg{
     public function onButtonPress_1(event:js.html.UIEvent){
         divBG.style.display = "none";
         if(cbButton != null) cbButton.call(this, event.target);
+    }
+
+    public function startDrag(ev){
+        bDragging = true;
+        // 座標を記録
+        var evt = ev;
+        if(bTouchAvailable){
+            evt = cast ev.changedTouches[0];
+        }
+        //iX = evt.pageX - divTitle.offsetLeft;
+        //iY = evt.pageY - divTitle.offsetTop;
+        iX = evt.pageX;
+        iY = evt.pageY;
+        //trace(evt.pageX, divTitle.offsetLeft, iX);
+    }
+
+    public function moveDrag(ev) {
+        if(!bDragging) return;
+        // 座標を取得し，差分を移動
+        var evt = ev;
+        if(bTouchAvailable){
+            evt = cast ev.changedTouches[0];
+        }
+        //trace(evt.pageX, divTitle.offsetLeft, iX);
+        //divBase.style.left = evt.pageX - iX + "px";
+        //divBase.style.top = evt.pageY - iY + "px";
+        divBase.style.left = divBase.offsetLeft + evt.pageX - iX + "px";
+        divBase.style.top = divBase.offsetTop + evt.pageY - iY + "px";
+        trace(iX - evt.pageX, divBase.style.left);
+        iX = evt.pageX;
+        iY = evt.pageY;
+        
+    }
+
+    public function endDrag() {
+        bDragging = false;
+        // 座標を取得し，差分を移動
+        
     }
 
 }
