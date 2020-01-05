@@ -322,6 +322,7 @@ class MnDialog{
     }
 
     public function moveDrag(ev) {
+        ev.preventDefault();
         if(!bDragging) return;
         // 座標を取得し，差分を移動
         var evt = ev;

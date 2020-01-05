@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="jp">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>MnDialog Example</title>
+        <script src="MnDialog.js"></script>
+        <script>
+(function(){
+    window.addEventListener("load", cbLoad);
+    var dlg;
+    function cbLoad(){"use strict"
+        console.log("Intializing...");
+        dlg = new MnDialog();
+        dlg.setTitle("This is a TITLE text");
+        dlg.setBody("This is a BODY text.");
+        dlg.setButtonCallback(function(arg1){
+            console.log("Button pressed: [" + arg1 + "]");
+        });
+        dlg.setButtonType("OKCancel");
+
+        var evAction = "click";
+        if("ontouchend" in window) evAction = "touchend";
+        gebi("bt01").addEventListener(evAction, function(){
+            console.log("Showing dialog...");
+            var oInputs;
+
+            oInputs = gebi("button_type").getElementsByTagName("input");
+            var sButtonType = "OK";
+            for(var i = 0, iLen = oInputs.length; i < iLen; i++){
+                if(oInputs[i].checked) sButtonType = oInputs[i].value;
+            }
+            oInputs = gebi("button_lang").getElementsByTagName("input");
+            var sButtonLang = "en";
+            for(var i = 0, iLen = oInputs.length; i < iLen; i++){
+                if(oInputs[i].checked) sButtonLang = oInputs[i].value;
+            }
+            dlg.setButtonType(sButtonType, sButtonLang);
+            oInputs = gebi("title_color").getElementsByTagName("input");
+            var sTitleColor = "color1";
+            for(var i = 0, iLen = oInputs.length; i < iLen; i++){
+                if(oInputs[i].checked) sTitleColor = oInputs[i].value;
+            }
+            switch(sTitleColor){
+                case "color1":
+                    dlg.setColor("", "#9999ff", "", "#6666ff");
+                    break;
+                case "color2":
+                    dlg.setColor("", "#33aa33", "", "#33cc33");
+                    break;
+                case "color3":
+                    dlg.setColor("", "#993333", "", "#663333");
+                    break;
+                default:
+                    dlg.setColor("", "#9999ff", "", "#6666ff");
+                    break;
+            }
+            var ret = dlg.show();
+        });
+    }
+
+    function gebi(id){
+        return document.getElementById(id);
+    }
+
+
+}())
+        </script>
+        <style>
+.container h3 + div > div{
+    display: inline-block;
+    width: 100px;
+    margin-bottom: 10px;
+}
+.container label{
+    margin-left: 10px;
+}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h3>Dialog</h3>
+            <div id="button_type">
+                <div>Button type:</div>
+                <label><input type="radio" name="button_type" value="OK" checked>OK</label>
+                <label><input type="radio" name="button_type" value="OKCancel">OK/Cancel</label>
+                <label><input type="radio" name="button_type" value="YesNo">Yes/No</label>
+                <label><input type="radio" name="button_type" value="YesNoCancel">Yes/No/Cancel</label>
+            </div>
+            <div id="button_lang">
+                <div>Button lang:</div>
+                <label><input type="radio" name="button_lang" value="en" checked>en</label>
+                <label><input type="radio" name="button_lang" value="jp">jp</label>
+                <label><input type="radio" name="button_lang" value="fr">fr</label>
+            </div>
+            <div id="title_color">
+                <div>Title color:</div>
+                <label><input type="radio" name="title_color" value="color1" checked><span style="color: #9999ff">◆ Color1</span></label>
+                <label><input type="radio" name="title_color" value="color2"><span style="color: #33aa33">◆ Color2</span></label>
+                <label><input type="radio" name="title_color" value="color3"><span style="color: #993333">◆ Color3</span></label>
+            </div>
+
+
+
+            <button type="button" id="bt01">Show Dialog</button>&nbsp;&nbsp;
+
+
+
+        </div>
+    </body>
+</html>

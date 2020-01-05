@@ -217,6 +217,7 @@ MnDialog.prototype = {
 		this.iY = evt.pageY;
 	}
 	,moveDrag: function(ev) {
+		ev.preventDefault();
 		if(!this.bDragging) {
 			return;
 		}
