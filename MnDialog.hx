@@ -129,6 +129,10 @@ class MnDialog{
         //divBG.addEventListener(evDragEnd, endDrag);
     }
 
+    /**
+     * Set title string
+     * @param text 
+     */
     public function setTitle(text:String){
         if(text != null){
             divTitle.textContent = text;
@@ -222,9 +226,11 @@ class MnDialog{
     background-color: ${colorTitle};
     cursor: pointer;
     border-radius: 4px;
-    min-width: 40px;
+    min-width: 60px;
     min-height: 20px;
     margin: 4px;
+    padding-left: 4px;
+    padding-right: 4px;
 }
 .${cssPrefix}button:hover{
     background-color: ${colorButton};
@@ -242,7 +248,7 @@ class MnDialog{
     public function setButtonType(btType, lang){
         trace(btType);
         /*
-        btType: OK OKCancel YesNo YesNoCancel
+        btType: OK OKCancel YesNo YesNoCancel None
         lang: en ja 
         */
 
@@ -284,7 +290,17 @@ class MnDialog{
             button3.style.display = "";
             button3.textContent = caption.cancel;
             button3.value = "Cancel";
+            case "None":
+            button1.style.display = "";
+            button2.style.display = "";
+            button3.style.display = "";
         }
+    }
+
+    public function setButtonCaption(bt1Caption, bt2Caption, bt3Caption){
+        if(bt1Caption != null) button1.textContent = bt1Caption;
+        if(bt2Caption != null) button2.textContent = bt2Caption;
+        if(bt3Caption != null) button3.textContent = bt3Caption;
     }
 
     public function setButtonCallback(cbFunc:js.lib.Function){
@@ -292,10 +308,22 @@ class MnDialog{
 
     }
 
-    public function show(){
-        divBase.style.left = "";
-        divBase.style.top = "";
-        divBG.style.display = "block";
+    public function show(iFixedLeft, iFixedTop) {
+        if(iFixedLeft == null){
+            this.divBase.style.left = "";
+        }else{
+            this.divBase.style.left = iFixedLeft + "px";
+        }
+        if(iFixedTop == null){
+            this.divBase.style.top = "";
+        }else{
+            this.divBase.style.top = iFixedTop + "px";
+        }
+        this.divBG.style.display = "block";
+    }
+
+    public function hide(){
+        divBG.style.display = "none";
     }
 
     public function onButtonPress(button){

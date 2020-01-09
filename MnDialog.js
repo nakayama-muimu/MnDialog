@@ -132,7 +132,7 @@ MnDialog.prototype = {
 			window.document.head.removeChild(oCSS);
 		}
 		var cssPrefix = this.cssPrefix + "_";
-		var css = "\n." + cssPrefix + "bg{\n    display: none;\n    background-color: rgba(0, 0, 0, 0.2);\n    position: fixed;\n    left: 0;\n    top: 0;\n    width: 100%;\n    height: 100%;\n}\n." + cssPrefix + "base{\n    position: absolute;\n    left: 50%;\n    top: 50%;\n    width: " + this.width + "px;\n    min-height: " + this.height + "px;\n    transform: translate(-50%, -50%);\n    background-color: " + this.colorBase + ";\n    border: solid 2px " + this.colorTitle + ";\n    border-radius: 4px;\n    text-align: left;\n    font-size: 0.8rem;\n}\n." + cssPrefix + "title{\n    background-color: " + this.colorTitle + ";\n    color: " + this.colorTitleText + ";\n    padding: 3px;\n    cursor: pointer;\n}\n." + cssPrefix + "body{\n    padding: 3px;\n    height: " + (this.height - 60) + "px;\n}\n." + cssPrefix + "buttons{\n    text-align: center;\n    padding: 3px;\n}\n." + cssPrefix + "button{\n    border-style: none;\n    color: " + this.colorTitleText + ";\n    background-color: " + this.colorTitle + ";\n    cursor: pointer;\n    border-radius: 4px;\n    min-width: 40px;\n    min-height: 20px;\n    margin: 4px;\n}\n." + cssPrefix + "button:hover{\n    background-color: " + this.colorButton + ";\n}";
+		var css = "\n." + cssPrefix + "bg{\n    display: none;\n    background-color: rgba(0, 0, 0, 0.2);\n    position: fixed;\n    left: 0;\n    top: 0;\n    width: 100%;\n    height: 100%;\n}\n." + cssPrefix + "base{\n    position: absolute;\n    left: 50%;\n    top: 50%;\n    width: " + this.width + "px;\n    min-height: " + this.height + "px;\n    transform: translate(-50%, -50%);\n    background-color: " + this.colorBase + ";\n    border: solid 2px " + this.colorTitle + ";\n    border-radius: 4px;\n    text-align: left;\n    font-size: 0.8rem;\n}\n." + cssPrefix + "title{\n    background-color: " + this.colorTitle + ";\n    color: " + this.colorTitleText + ";\n    padding: 3px;\n    cursor: pointer;\n}\n." + cssPrefix + "body{\n    padding: 3px;\n    height: " + (this.height - 60) + "px;\n}\n." + cssPrefix + "buttons{\n    text-align: center;\n    padding: 3px;\n}\n." + cssPrefix + "button{\n    border-style: none;\n    color: " + this.colorTitleText + ";\n    background-color: " + this.colorTitle + ";\n    cursor: pointer;\n    border-radius: 4px;\n    min-width: 60px;\n    min-height: 20px;\n    margin: 4px;\n    padding-left: 4px;\n    padding-right: 4px;\n}\n." + cssPrefix + "button:hover{\n    background-color: " + this.colorButton + ";\n}";
 		var style = window.document.createElement("style");
 		style.id = this.cssPrefix;
 		style.appendChild(window.document.createTextNode(css));
@@ -157,6 +157,11 @@ MnDialog.prototype = {
 		this.button2.style.display = "none";
 		this.button3.style.display = "none";
 		switch(btType) {
+		case "None":
+			this.button1.style.display = "";
+			this.button2.style.display = "";
+			this.button3.style.display = "";
+			break;
 		case "OK":
 			this.button1.textContent = caption.ok;
 			this.button1.value = "OK";
@@ -187,13 +192,35 @@ MnDialog.prototype = {
 			break;
 		}
 	}
+	,setButtonCaption: function(bt1Caption,bt2Caption,bt3Caption) {
+		if(bt1Caption != null) {
+			this.button1.textContent = bt1Caption;
+		}
+		if(bt2Caption != null) {
+			this.button2.textContent = bt2Caption;
+		}
+		if(bt3Caption != null) {
+			this.button3.textContent = bt3Caption;
+		}
+	}
 	,setButtonCallback: function(cbFunc) {
 		this.cbButton = cbFunc;
 	}
-	,show: function() {
-		this.divBase.style.left = "";
-		this.divBase.style.top = "";
+	,show: function(iFixedLeft,iFixedTop) {
+		if(iFixedLeft == null) {
+			this.divBase.style.left = "";
+		} else {
+			this.divBase.style.left = iFixedLeft + "px";
+		}
+		if(iFixedTop == null) {
+			this.divBase.style.top = "";
+		} else {
+			this.divBase.style.top = iFixedTop + "px";
+		}
 		this.divBG.style.display = "block";
+	}
+	,hide: function() {
+		this.divBG.style.display = "none";
 	}
 	,onButtonPress: function(button) {
 		this.divBG.style.display = "none";
