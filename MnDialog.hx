@@ -319,9 +319,9 @@ class MnDialog{
             button3.textContent = caption.cancel;
             button3.value = "Cancel";
             case "None":
-            button1.style.display = "";
-            button2.style.display = "";
-            button3.style.display = "";
+            button1.style.display = "none";
+            button2.style.display = "none";
+            button3.style.display = "none";
         }
     }
 
