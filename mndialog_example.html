@@ -17,7 +17,7 @@
         dlg.setButtonCallback(function(arg1){
             console.log("Button pressed: [" + arg1 + "]");
         });
-        dlg.setButtonType("OKCancel");
+        //dlg.setButtonType("OKCancel");
 
         var evAction = "click";
         if("ontouchend" in window) evAction = "touchend";
@@ -55,7 +55,19 @@
                     dlg.setColor("", "#9999ff", "", "#6666ff");
                     break;
             }
+            oInputs = gebi("button_forcus").getElementsByTagName("input");
+            var sButtonFocus = "none";
+            for(var i = 0, iLen = oInputs.length; i < iLen; i++){
+                if(oInputs[i].checked) sButtonFocus = oInputs[i].value;
+            }
+            oInputs = gebi("enable_keyup").getElementsByTagName("input");
+            if(oInputs[0].checked){
+                dlg.enableKeyup(true);
+            }else{
+                dlg.enableKeyup(false);
+            }
             var ret = dlg.show();
+            dlg.setButtonFocus(sButtonFocus);
         });
     }
 
@@ -77,6 +89,7 @@
 }
 .container label{
     margin-left: 10px;
+    margin-bottom: 10px;
     display: inline-block;
 }
         </style>
@@ -84,6 +97,10 @@
     <body>
         <div class="container">
             <h3>Dialog</h3>
+            <ul>
+                <li>Dialog can be moved by dgragging title area.</li>
+                <li>タイトル部分をドラッグすると，ダイアログを移動できます。</li>
+            </ul>
             <div id="button_type">
                 <div>Button type:</div>
                 <label><input type="radio" name="button_type" value="OK" checked>OK</label>
@@ -102,6 +119,17 @@
                 <label><input type="radio" name="title_color" value="color1" checked><span style="color: #9999ff">◆ Color1</span></label>
                 <label><input type="radio" name="title_color" value="color2"><span style="color: #33aa33">◆ Color2</span></label>
                 <label><input type="radio" name="title_color" value="color3"><span style="color: #993333">◆ Color3</span></label>
+            </div>
+            <div id="button_forcus">
+                <div>Button forcus:</div>
+                <label><input type="radio" name="button_forcus" value="none" checked>Not set</label>
+                <label><input type="radio" name="button_forcus" value="button1">Button1</label>
+                <label><input type="radio" name="button_forcus" value="button2">Button2</label>
+                <label><input type="radio" name="button_forcus" value="button3">Button3</label>
+            </div>
+            <div id="enable_keyup">
+                <div>Enable key action for ENTER(for "OK") and ESCAPE(for "Cancel")</div>
+                <label><input type="checkbox"></label>
             </div>
 
 
