@@ -28,6 +28,7 @@ class MnDialog{
     var id:String = '';
     var width:Int;
     var height:Int;
+    var maxBodyHeight:Int = 400;
     var cbButton:js.lib.Function;
     var bTouchAvailable = false;
     var bDragging = false;
@@ -240,6 +241,8 @@ class MnDialog{
 .${cssPrefix}body{
     padding: 3px;
     height: ${this.height - 60}px;
+    max-height: ${this.maxBodyHeight}px;
+    overflow-y: auto;
 }
 .${cssPrefix}buttons{
     text-align: center;
