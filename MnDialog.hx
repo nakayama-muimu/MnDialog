@@ -19,13 +19,14 @@ class MnDialog{
     var button3:js.html.ButtonElement;
     var btType = "OK";
     var btLang = "en";
+    var btFocused = "none";
     var keyupEnabled = false;
     var colorTitle:String = "#9999ff";
     var colorTitleText = "#ffffff";
     var colorButton:String = "#6666ff";
     var colorBase:String = "#eeeeff";
     var cssPrefix:String;
-    var id:String = '';
+    var id:String = "";
     var width:Int;
     var height:Int;
     var maxBodyHeight:Int = 400;
@@ -384,10 +385,16 @@ class MnDialog{
     }
 
     /**
-     * Set focus on button. Must be called after show() is called!
-     * @param button "button1" "button2" "button3" "none"(no focus)
+     * Set focus on button.
+     * @param btNumber "button1" "button2" "button3" "none"(no focus)
+     *     Without btNumber, set focus to previously designated button (default "none")
      */
-    public function setButtonFocus(btNumber){
+    public function setButtonFocus(btNumber = ""){
+        if(btNumber != ""){
+            btFocused = btNumber;
+        }else{
+            btNumber = btFocused;
+        }
         trace("Button focus on: " + btNumber);
         switch(btNumber){
             case "button1":
@@ -397,11 +404,14 @@ class MnDialog{
             case "button3":
                 button3.focus();
             default:
-            button1.blur();
-            button2.blur();
-            button3.blur();
+                btFocused = "none";
+                button1.blur();
+                button2.blur();
+                button3.blur();
         }
     }
+
+    
 
     /**
      * Show dialog
@@ -425,6 +435,7 @@ class MnDialog{
         }
 
         this.divBG.style.display = "block";
+        setButtonFocus();
     }
 
     /**

@@ -16,6 +16,7 @@ var MnDialog = $hx_exports["MnDialog"] = function(width,height,id,cssPrefix) {
 	this.colorTitleText = "#ffffff";
 	this.colorTitle = "#9999ff";
 	this.keyupEnabled = false;
+	this.btFocused = "none";
 	this.btLang = "en";
 	this.btType = "OK";
 	var _gthis = this;
@@ -242,6 +243,14 @@ MnDialog.prototype = {
 		}
 	}
 	,setButtonFocus: function(btNumber) {
+		if(btNumber == null) {
+			btNumber = "";
+		}
+		if(btNumber != "") {
+			this.btFocused = btNumber;
+		} else {
+			btNumber = this.btFocused;
+		}
 		switch(btNumber) {
 		case "button1":
 			this.button1.focus();
@@ -253,6 +262,7 @@ MnDialog.prototype = {
 			this.button3.focus();
 			break;
 		default:
+			this.btFocused = "none";
 			this.button1.blur();
 			this.button2.blur();
 			this.button3.blur();
@@ -273,6 +283,7 @@ MnDialog.prototype = {
 			window.addEventListener("keyup",$bind(this,this.cbKeyup));
 		}
 		this.divBG.style.display = "block";
+		this.setButtonFocus();
 	}
 	,hide: function() {
 		this.divBG.style.display = "none";

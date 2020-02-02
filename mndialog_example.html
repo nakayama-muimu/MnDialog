@@ -55,7 +55,7 @@
                     dlg.setColor("", "#9999ff", "", "#6666ff");
                     break;
             }
-            oInputs = gebi("button_forcus").getElementsByTagName("input");
+            oInputs = gebi("button_focus").getElementsByTagName("input");
             var sButtonFocus = "none";
             for(var i = 0, iLen = oInputs.length; i < iLen; i++){
                 if(oInputs[i].checked) sButtonFocus = oInputs[i].value;
@@ -66,8 +66,9 @@
             }else{
                 dlg.enableKeyup(false);
             }
-            var ret = dlg.show();
             dlg.setButtonFocus(sButtonFocus);
+            var ret = dlg.show();
+            
         });
     }
 
@@ -120,12 +121,12 @@
                 <label><input type="radio" name="title_color" value="color2"><span style="color: #33aa33">◆ Color2</span></label>
                 <label><input type="radio" name="title_color" value="color3"><span style="color: #993333">◆ Color3</span></label>
             </div>
-            <div id="button_forcus">
-                <div>Button forcus:</div>
-                <label><input type="radio" name="button_forcus" value="none" checked>Not set</label>
-                <label><input type="radio" name="button_forcus" value="button1">Button1</label>
-                <label><input type="radio" name="button_forcus" value="button2">Button2</label>
-                <label><input type="radio" name="button_forcus" value="button3">Button3</label>
+            <div id="button_focus">
+                <div>Button focus:</div>
+                <label><input type="radio" name="button_focus" value="none" checked>Not set</label>
+                <label><input type="radio" name="button_focus" value="button1">Button1</label>
+                <label><input type="radio" name="button_focus" value="button2">Button2</label>
+                <label><input type="radio" name="button_focus" value="button3">Button3</label>
             </div>
             <div id="enable_keyup">
                 <div>Enable key action for ENTER(for "OK") and ESCAPE(for "Cancel")</div>
